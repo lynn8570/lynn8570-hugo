@@ -306,7 +306,13 @@ color:#b2b87a;
 font-weight: bold;
 text-decoration: none;
 }
+/* payment
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.payment{
+margin:20px 0; 
 
+
+}
 /* TableOfContents
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .mlistence {
