@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>{{ .Title }}</title>
+
+  <meta name="description" content="{{ .Title }}"/>
+  <meta name="author" content="{{ .Site.Author.name }}"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <!--<base href="{{ .Site.BaseURL }}" /> -->
+	<link rel="shorticon icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/css/fonts.css"/>
+  <link rel="stylesheet" href="/css/normalize.css"/>
+  <link rel="stylesheet" href="/css/skeleton.css"/>
+  <link rel="stylesheet" href="/css/custom.css"/>
+  <link rel="stylesheet" href="/genericons/genericons.css"/>
+  {{ $theme := "dark" }}
+  <link rel="stylesheet" href="/highlight/{{ $theme }}.css"/>
+  <link href="index.xml" rel="alternate" type="application/rss+xml" title="Posts + Links" />
+  <link href="/links/index.xml" rel="alternate" type="application/rss+xml" title="Links" />
+  <link href="/posts/index.xml" rel="alternate" type="application/rss+xml" title="Posts" />
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?da7b0a0bc5fdc14d8ccecd1e6d7c9317";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+	<script type="text/javascript" src="/tagcloud/zns_3dsc.js"></script>
+  {{ partial "header_extra.html" . }}
+</head>
+<body>

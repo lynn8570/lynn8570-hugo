@@ -1,0 +1,52 @@
+﻿<div id="sidebar">
+<div class="sidebar">
+  <div class="sidebar-about">
+    <a href="{{ .Site.BaseURL }}">
+      <img src="/media/me.jpg" title="{{ .Site.Author.name }}" alt="Me" />
+      <h4 class="sidebar-title">{{ .Site.Title }}</h4>
+    </a>
+    <span class="sidebar-tagline">欢迎光临</span>
+  </div>
+  <nav class="sidebar-nav">
+    <ul class="sidebar-nav-list">
+      <li class="sidebar-nav-item ">
+        <span class="genericon genericon-home"></span><a class="sidebar-link" href="{{.Site.BaseURL}}">Home</a>
+      </li>
+      <li class="sidebar-nav-item">
+        <a class="genericon genericon-heart" href="/posts/index.xml"></a><a class="sidebar-link" href="/posts/">Posts</a>
+      </li>
+      <li class="sidebar-nav-item">
+        <a class="genericon genericon-wordpress" href="http://lynn8570.weebly.com/"></a><a class="sidebar-link" href="http://lynn8570.weebly.com/">旧坑Weebly</a>
+      </li>
+      <li class="sidebar-nav-item">
+        <a class="genericon genericon-info" href="/posts/Helloword/"></a><a class="sidebar-link" href="/posts/Helloword/">About me</a>
+      </li>
+    </ul>
+  </nav>
+  
+  <div class="side-tags" id="all-tags">
+  				{{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+    				<a  class ="sidebar-tags-link" href="/tags/{{ $name | urlize }}">{{ $name }}</a>
+  				{{ end }}
+  				{{ range $name, $taxonomy := .Site.Taxonomies.categories }}
+    				<a class ="sidebar-tags-link" href="/categories/{{ $name | urlize }}">{{ $name }}</a>
+  				{{ end }}
+ 			
+  </div>
+  <div class="sidebar-externals">
+  	<a class="genericon genericon-github" href="https://github.com/lynn8570" ><!--GitHub--></a>
+  	<a class="genericon genericon-facebook" href="https://www.facebook.com/lynn.lin.8570"><!--Facebook--></a>
+  	<a class="genericon genericon-dribbble" href="https://dribbble.com/lynn8570"><!--dribbble--></a>
+  	<a class="genericon genericon-mail" href="mailto:lynn8570@gmail.com"></a>
+  	<div >
+  		<a class="sidebar-link" href="http://stackoverflow.com/users/1048872/lynn8570">Stackoverflow</a>
+  	</div>
+  </div>
+  
+  <hr/>
+  <div class="sidebar-bottom">
+    <p>Powered by <a href="http://gohugo.io">Hugo</a>. Theme: <a href="https://github.com/TiTi/hurock">Hurock</a>.</p>
+    <p>Copyright &copy; {{.Now.Format "2006"}}. All rights reserved.</p>
+  </div>
+</div>
+</div>

@@ -1,0 +1,48 @@
+﻿{{ partial "header.html" . }}
+
+<div id="container">
+  <div id="post-header">
+    <p class="post-infos">
+      <time>{{ .Date.Format "2006-01-02 15:04" }}</time>
+      {{ .Render "tags" }}
+    </p>
+    <h1>{{ .Title }}</h1>
+  </div>
+
+
+  {{ if and (not .Site.Params.notoc) .TableOfContents }}
+  <div class="toc">
+    <small class="toc-label">Contents</small>
+    {{ .TableOfContents }}
+  </div>
+  {{ end }}
+
+  <div class="post">
+    {{ .Content }}
+  </div>
+<div class="mlistence">
+	<h6>内容许可</h6>
+	 	本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/cn/">知识共享署名-相同方式共享 3.0 中国大陆许可协议</a>进行许可。
+</div>
+<div class="prenext">
+  
+      {{ if .Next }}
+      <a href="{{ .Next.Permalink }}"><span aria-hidden="true">&larr;</span> 上一篇</a>
+      {{ else }}
+      <span aria-hidden="true">&larr;</span> 上一篇
+      {{ end }}
+      {{ if .Prev }}
+			<a href="{{ .Prev.Permalink }}">下一篇 <span aria-hidden="true">&rarr;</span></a>
+      {{ else }}
+			下一篇 <span aria-hidden="true">&rarr;</span>
+      {{ end }}
+   
+  </div>
+    
+    {{ partial "payment.html" . }}
+    {{ partial "disqus.html" . }}
+  
+</div>
+
+{{ partial "sidebar.html" . }}
+{{ partial "footer.html" . }}

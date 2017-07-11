@@ -1,0 +1,13 @@
+﻿---
+contentdir: "content"
+layoutdir: "layouts"
+publishdir: "public"
+indexes:
+  category: "categories"
+  tag: "tags"
+baseURL: "http://lynn8570.github.io/"
+title: "优里丫店"
+author: lynn8570
+email: lynn8570@gmail.com
+canonifyurls: false
+...
