@@ -140,3 +140,18 @@ Hierachy用于查看界面的层级结构。
 检测结果：
 
 ![](http://7xl98n.com1.z0.glb.clouddn.com/lint-1.png)
+
+
+
+## UI性能分析解决总结 ##
+
+
+
+- 布局优化；尽量使用include、merge、ViewStub标签，尽量不存在冗余嵌套及过于复杂布局（譬如10层就会直接异常），尽量使用GONE替换INVISIBLE，使用weight后尽量将width和heigh设置为0dp减少运算，Item存在非常复杂的嵌套时考虑使用自定义Item View来取代，减少measure与layout次数等。
+- 列表及Adapter优化；尽量复用getView方法中的相关View，不重复获取实例导致卡顿，列表尽量在滑动过程中不进行UI元素刷新等。
+- 背景和图片等内存分配优化；尽量减少不必要的背景设置，图片尽量压缩处理显示，尽量避免频繁内存抖动等问题出现。
+- 自定义View等绘图与布局优化；尽量避免在draw、measure、layout中做过于耗时及耗内存操作，尤其是draw方法中，尽量减少draw、measure、layout等执行次数。
+- canvas.clipRect 限制draw的可见区域
+
+
+
