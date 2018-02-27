@@ -305,8 +305,15 @@ XML集成：
 
 
 
-
-
 ## 总结
 
 这两个应用主要展示 VrPanoramaView 和VrVideoView的基本用法
+
+
+
+## 示例video360和videoplayer
+
+video360要求设备最低版本为android 24，android n 7.0以上
+
+
+
