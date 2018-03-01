@@ -73,7 +73,7 @@ AR(Argumented Reality)增强现实，虚拟数字画面+裸眼现实
 
     sdk-simplepanowidget 	可以载入全景视图的组件
     sdk-simplevideowidget 	可以渲染360度视频的视图组件 VRView
-    sdk-video360 	可以渲染360度视频的视图组件
+    sdk-video360 	可以渲染360度视频的视图组件，在可支持的手机上运行vr效果的播放器时候，**屏幕会闪烁**
     sdk-videoplayer 	通过 Asynchronous Reprojection Video Surface API来播放视频，
 
   - Treasure Hunt 示例应用演练
@@ -198,50 +198,274 @@ ARCore 是一个用于在 Android 上构建增强现实应用的平台。ARCore 
 - [**环境理解**](https://developers.google.com/ar/discover/concepts#environmental_understanding)让手机可以检测平坦水平表面（例如地面或咖啡桌）的大小和位置。
 - [**光估测**](https://developers.google.com/ar/discover/concepts#light_estimation)让手机可以估测环境当前的光照条件。
 
+### ARCore基本工作原理
 
+> ARCore 在做两件事：在移动设备移动时跟踪它的位置和构建自己对现实世界的理解。
+>
+> ARCore 的运动跟踪技术使用手机摄像头标识兴趣点（称为特征点），并跟踪这些点随着时间变化的移动。将这些点的移动与手机惯性传感器的读数组合，ARCore 可以在手机移动时确定它的位置和屏幕方向。
+>
+> 除了标识关键点外，ARCore 还会检测平坦的表面（例如桌子或地面），并估测周围区域的平均光照强度。 这些功能共同让 ARCore 可以构建自己对周围世界的理解。
+>
+> 借助 ARCore 对现实世界的理解，您能够以一种与现实世界无缝整合的方式添加物体、注释或其他信息。 您可以将一只打盹的小猫放在咖啡桌的一角，或者利用艺术家的生平信息为一幅画添加注释。 运动跟踪意味着您可以移动和从任意角度查看这些物体，即使您转身离开房间，当您回来后，小猫或注释还会在您添加的地方。
 
 ### Arcore SDK概览
 
+#### Hello AR java  
+
 需要android 7.0以上，需要安装arcore
 
-Cv java
+- 清单文件，声明需要android.hardware.camera.ar，且需要安装Arcore，文件表明应用在Google的应用市场上只能在支持arcore的设备上可见
 
-Hello AR java  
+  ```
+  <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      package="com.google.ar.core.examples.java.helloar">
 
-但是安装了之后，在7.1上又提示 “this device does not support AR”
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- This tag indicates that this application requires ARCore.  This results in the application
+         only being visible in the Google Play Store on devices that support ARCore. -->
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
+
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="false"
+        tools:ignore="GoogleAppIndexingWarning">
+
+      <activity
+          android:name=".HelloArActivity"
+          android:label="@string/app_name"
+          android:configChanges="orientation|screenSize"
+          android:exported="true"
+          android:theme="@style/Theme.AppCompat.NoActionBar"
+          android:screenOrientation="locked">
+        <intent-filter>
+          <action android:name="android.intent.action.MAIN"/>
+          <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+      </activity>
+      <!-- 需要安装arcore -->
+      <meta-data android:name="com.google.ar.core" android:value="required" />
+    </application>
+  </manifest>
+  ```
+
+#### computevision
+
+- 清单文件
+
+  ```
+  <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      package="com.google.ar.core.examples.java.computervision">
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="false"
+        tools:ignore="GoogleAppIndexingWarning">
+
+      <activity
+          android:name=".MainActivity"
+          android:label="@string/app_name"
+          android:configChanges="orientation|screenSize"
+          android:exported="true"
+          android:theme="@style/Theme.AppCompat.NoActionBar"
+          android:screenOrientation="locked">
+        <intent-filter>
+          <action android:name="android.intent.action.MAIN"/>
+          <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+      </activity>
+    </application>
+  </manifest>
+  ```
+
+> TODO: ARdemo walkthrough
+
+Api 查阅
+
+- [com.google.ar.core](https://developers.google.com/ar/reference/java/com/google/ar/core/package-summary) ARCore API implementation.
+- [com.google.ar.core.exceptions](https://developers.google.com/ar/reference/java/com/google/ar/core/exceptions/package-summary) ARCore exceptions.
 
 
+
+### 如何启用ARCore
+
+#### 清单文件配置
+
+- AR only: 以下定义表示应用只能在支持android.hardware.camera.ar，且安装了com.google.ar.core的设备上运行
+
+  ```
+  <uses-sdk android:minSdkVersion="{24 or higher}" />
+  24以上版本
+    ...
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true" />
+
+    <application>
+      ...
+          <meta-data android:name="com.google.ar.core" android:value="required" />
+      ...
+  ```
+
+- AR可选，表示可以在不支持AR Core的设备上运行
+
+  ```
+  <uses-sdk android:minSdkVersion="{14 or higher}" />
+    ...
+
+    <application>
+      ...
+          <meta-data android:name="com.google.ar.core" android:value="optional" />
+      ...
+  ```
+
+#### 添加依赖
+
+确认已经在项目的  `build.gradle` 文件中添加了 Google's Maven 仓库：
+
+```
+allprojects {
+repositories {
+    google()
+        ...
+
+```
+
+添加 ARCore 库依赖
+
+```
+dependencies {
+    // ARCore library
+    implementation 'com.google.ar:core:1.0.0'
+    ...
+
+```
+
+> Gradle会自动的将ARcore中的标签合并到应用的清单文件中。
+
+#### 执行运行时检查
+
+确认是否已安装ARcore
+
+```
+// Set to true ensures requestInstall() triggers installation if necessary.
+private boolean mUserRequestedInstall = true;
+
+// in onResume:
+try {
+  if (mSession == null) {
+    switch (ArCoreApk.getInstance().requestInstall(this, mUserRequestedInstall)) {
+      case INSTALLED:
+        mSession = new Session(this);
+        // Success.
+        break;
+      case INSTALL_REQUESTED:
+        // Ensures next invocation of requestInstall() will either return
+        // INSTALLED or throw an exception.
+        mUserRequestedInstall = false;
+        return;
+    }
+  }
+} catch (UnavailableUserDeclinedInstallException e) {
+  // Display an appropriate message to the user and return gracefully.
+  return;
+} catch (...) {  // current catch statements
+  ...
+  return;  // mSession is still null
+}
+
+```
+
+在Activity resume的时候，执行session创建，如果创建不成功，则请求安装，
+
+
+
+检查是否支持AR core，可选方案的时候
+
+```
+void maybeEnableArButton() {
+  // Likely called from Activity.onCreate() of an activity with AR buttons.
+  ArAvailability availability = ArCoreApk.getInstance().checkAvailability(this);
+  if (availability.isTransient()) {
+    // re-query at 5Hz while we check compatibility.
+    new Handler().postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        maybeEnableArButton();
+      }
+    }, 200);
+  }
+  if (availability.isSupported()) {
+    mArButton.setVisibility(VISIBLE);
+    mArButton.setEnabled(true);
+    // indicator on the button.
+  } else { // unsupported or unknown
+    mArButton.setVisibility(HIDDEN);
+    mArButton.setEnabled(false);
+  }
+}
+```
+
+> checkAvailability可能需要联网检查
 
 ## Google VR AR 在现有平台上的运行情况
 
 1. 寻宝游戏，demo 代码根据vr提供的sdk实现了左右分屏的这种效果，也就是说只要运行在普通的安卓手机上，在屏幕上，就可以看到一个左右分屏显示的功能，然后如果配合Google 的cardboard viewer 或者是 Daydream viewer 是可以直接在眼睛上实现3D显示的。那这个demo在我们的820+眼镜上的运行效果就是。在切换到2D模式的时候，我们看到的就是两个左右的图片，切换到3d的时候，确实可以实现看到一个叠加的图片，但是这个叠加后的有些变形。
-2. ​
+
+2. Google vr播放器，需要在7.0以上版本运行，2d的播放器可以在5516上运行，但要切换成3D模式的时候，提示手机与Daydream不兼容；在pixel一些指定的兼容设备上才可运行，但是运行起来感觉屏幕闪烁较为明显，需要配合daydream屏体的控制器运行观看
+
+3. ARcore支持的设备：
+
+   > Asus Zenfone AR
+   >
+   > LG V30
+   >
+   > Google Pixel
+   >
+   > OnePlus 5
+   >
+   > Samsung Galaxy
+
+   在可支持的设备上，**hello ar**运行的起来就是一个摄像头应用，在识别平坦桌面后，可以放置android玩偶，然后移动相机，可以实现，各种视角查看玩偶。就想真实存在的物体一样。
+
+   5516无法支持ARcore
+
+   **computevision** 纹理阅读，可识别物体纹理
 
 
 
+## Nibiru 系统
 
 
 
+## Nibiru VR 
+
+- Nibiru studio
+
+  > 面向VR应用开发者，开发者无需OpenGL基础，无需写
+  > shader和计算矩阵，极大地简化了VR应用开发流程。并且
+  > 支持Head Tracking和Raycast交互方式，以及具有完善的
+  > 事件系统。定义了功能丰富的VR控件与组件集合，在功能点
+  > 上涵盖了Image、Label、Skybox、Listview、
+  > ProgressBar Gridview等核心控件，同时支持播放、图片、
+  > 浏览器等组件。
+
+- demo运行
+
+  新建一个空的项目，选择 file-new-import module，选择模块源码位置，点击finish，完成倒入
+
+  需要睿悦的os
 
 
 
-## Niburu 系统
-
-
-
-
-
-
-
-## Niburu VR 可以做什么
-
-Google Daydream 是否支持？
-
-其他平台的VR兼容性？
-
-
-
-## Niburu AR 可以 做什么
+## Nibiru AR 
 
 
 
