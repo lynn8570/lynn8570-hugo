@@ -18,7 +18,7 @@ Google的SDK示例代码中有两个应用 simplepanowidget和simlevrvideo展示
 
   360度媒体的格式可以是 mono或者是stereo。图片和视频通常需要存储在equirectangular-panoramic (equirect-pano)格式中，可以理解为柱体全景格式，这种格式为大部分拍摄解决方案所支持的格式。
 
-  Mono 360使用一张全景，stero 360使用两张堆积的全景图片
+  Mono 360使用一张全景，stero 360使用两张堆积的全景图片。stero在全景之上，还有一个景深的这样一个概念，我们对前景和背景的距离深度有了一个感官的体验。
 
 - 360度图片
 
@@ -63,6 +63,8 @@ Google的SDK示例代码中有两个应用 simplepanowidget和simlevrvideo展示
   - (Unsupported) [Domemaster3D](https://github.com/zicher3d-org/domemaster-stereo-shader/):    A free solution for capturing mono and stereo 360° images from Maya / Autodesk 3ds Max.
   - [Renderman](https://drive.google.com/drive/folders/0B0lYKpimsJgWfjFwa2xLQlVGNnJXcGxvbmNJbzIwUkRWQ2YtOHB5blNMNjlXSUlxbmJNVVU):    Open-source library for capturing 360° content.开源库
   - [Rendering Omnidirectional Stereo Content](https://developers.google.com/vr/jump/rendering-ods-content.pdf):    A whitepaper for anyone interested in writing their own 360° capture    solutions.
+
+- YouTube下载，在YouTube上搜索monoscopic的视频，然后通过 http://youtubemp4.to/ 来下载mp4格式的文件
 
 ## 全景图片walkthrough
 
@@ -311,9 +313,138 @@ XML集成：
 
 
 
-## 示例video360和videoplayer
+## 番外示例video360和videoplayer
 
-video360要求设备最低版本为android 24，android n 7.0以上
+
+
+
+
+### sdk-video360 	
+
+video360要求设备最低版本为android 24，android N 7.0以上
+
+可以渲染全景视频的播放器。 根据intent中的文件uri来进行进行视频播放。应用中定义了两个activity，一个只能在2d的launcher中显示图标，另外一个只能在专属的Daydream Home中显示图标
+
+```
+ <!-- This is a 2D Version of the video player. -->
+    <activity
+        android:name=".VideoActivity"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait">
+      <!-- This Activity only shows up in the 2D launcher.  -->
+      <intent-filter>
+          <action android:name="android.intent.action.MAIN" />
+          <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+
+    <!-- This is a standard Daydream Activity.  -->
+    <activity
+        android:name=".VrVideoActivity"
+        android:configChanges="orientation|keyboardHidden|screenSize|uiMode|navigation"
+        android:enableVrMode="@string/gvr_vr_mode_component"
+        android:label="@string/app_name"
+        android:launchMode="singleTask"
+        android:resizeableActivity="false"
+        android:screenOrientation="landscape"
+        android:theme="@style/VrActivityTheme">
+
+      <!-- The VR icon to be used in Daydream Home comes in two parts: a foreground icon and a
+           background icon. The foreground icon is also used by the 2D Activity. -->
+      <meta-data
+          android:name="com.google.android.vr.icon"
+          android:resource="@drawable/icon" />
+      <meta-data
+          android:name="com.google.android.vr.icon_background"
+          android:resource="@drawable/vr_icon_background" />
+
+      <!-- This Activity only shows up in Daydream Home and not the 2D Launcher. -->
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="com.google.intent.category.DAYDREAM"/>
+      </intent-filter>
+    </activity>
+```
+
+其中activity的大部分代码都是和权限相关的，真正的视频解析加载在MediaLoader中，从类的说明中可以看到，可以通过adb命令来传递intent来打开视频：
+
+```
+ <p>Example intents compatible with adb are:
+ *   <ul>
+ *     <li>
+ *       A top-bottom stereo image in the VR Activity.
+ *       <b>adb shell am start -a android.intent.action.VIEW  \
+ *          -n com.google.vr.sdk.samples.video360/.VrVideoActivity \
+ *          -d "file:///sdcard/IMAGE.JPG" \
+ *          --ei stereoFormat 2
+ *       </b>
+ *     </li>
+ *     <li>
+ *       A monoscopic video in the 2D Activity.
+ *       <b>adb shell am start -a android.intent.action.VIEW  \
+ *          -n com.google.vr.sdk.samples.video360/.VideoActivity \
+ *          -d "file:///sdcard/VIDEO.MP4" \
+ *          --ei stereoFormat 0
+ *       </b>
+ *     </li>
+ *   </ul>
+ *
+ * <p>This sample does not validiate that a given file is readable by the Android media decoders.
+ * You should validate that the file plays on your target devices via
+ * <b>adb shell am start -a android.intent.action.VIEW -t video/mpeg -d "file:///VIDEO.MP4"</b>
+```
+
+我们从YouTube上下载了一个monoscopic的视频，放在sdcard的目录下，通过运行命令可播放对应的全景视频
+
+```
+F:\09androidsdk>adb shell am start -a android.intent.action.VIEW -n com.google.v
+r.sdk.samples.video360/.VideoActivity -d "file://storage/sdcard/monoscopicVideo.
+mp4" --ei stereoFormat 0
+Starting: Intent { act=android.intent.action.VIEW dat=file://storage/sdcard/mono
+scopicVideo.mp4 cmp=com.google.vr.sdk.samples.video360/.VideoActivity (has extra
+s) }
+```
+
+该命令启用的是VideoActivity来播放全景视频，参数stereoFormat 0表示，视频类型为单个摄像头帧拍摄的全景视频。1表示用左右眼的方式渲染的，如果在非vr的显示中显示的话，则只显示左眼部分。2表示上下部分分割的左右眼渲染方式，如果在非vr显示中显示的话，只显示上部分内容
+
+```
+/** Standard media where a single camera frame takes up the entire media frame. */
+  public static final int MEDIA_MONOSCOPIC = 0;
+  /**
+   * Stereo media where the left & right halves of the frame are rendered for the left & right eyes,
+   * respectively. If the stereo media is rendered in a non-VR display, only the left half is used.
+   */
+  public static final int MEDIA_STEREO_LEFT_RIGHT = 1;
+  /**
+   * Stereo media where the top & bottom halves of the frame are rendered for the left & right eyes,
+   * respectively. If the stereo media is rendered in a non-VR display, only the top half is used.
+   */
+  public static final int MEDIA_STEREO_TOP_BOTTOM = 2;
+```
+
+播放器demo在8996上 android6.0无法运行。
+
+**在8953上可以运行播放3d stereo视频，视频播放不正常，叠加不正确。**
+
+但是切换成cardboard模式的点击 眼镜 标示的图标按钮后，切换到VrVideoActivity提示：
+
+> 手机不兼容：手机必须与Daydream兼容，请访问Daydream帮助中心了解详情。
+
+在moto 	z和pixel等兼容手机上可正常运行，实现左右眼形变播放，中间会弹出和daydream控制器的配对的等。
+
+
+
+对应配合Daydream viewer应该就可以看到立体视频效果。
+
+*TODO: 如何与Daydream平台进行兼容，需要做哪些工作，目前官网上列出的课兼容手机有华为mate，三星galaxy note8，pixel，moto z等手机。*
+
+### sdk-videoplayer 	
+
+通过 Asynchronous Reprojection Video Surface API来播放视频，也是一个播放器。
+
+在5516上，运行出错，暂时不研究了
 
 
 

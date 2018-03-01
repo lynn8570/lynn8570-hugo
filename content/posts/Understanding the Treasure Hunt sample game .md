@@ -21,9 +21,7 @@ categories:
 
 运行**samples-sdk-treasurehunt** 
 
-在android 4.4以上就可以运行，但是不一定能用，例如如果没有Gsensor数据等无法进行运动捕捉。
-
-虽然可以正常运行，但是无法进行体验。
+在android 4.4以上就可以运行，但是不一定能用，例如如果没有Gsensor数据等无法进行运动捕捉。虽然可以正常运行，但是无法进行体验。
 
 ## Manifest 文件
 

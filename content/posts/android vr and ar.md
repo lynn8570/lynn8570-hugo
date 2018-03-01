@@ -82,17 +82,146 @@ AR(Argumented Reality)增强现实，虚拟数字画面+裸眼现实
 
     *Todo: [Treasure Hunt walkthrough](https://developers.google.com/vr/android/samples/treasure-hunt) 详细走一遍sample的代码* 
 
-  - ​
+  - 开发GoogleVR项目步骤
+
+    1. 配置项目等级
+
+       ```
+       // The Google VR SDK requires version 2.3.3 or higher.
+           classpath 'com.android.tools.build:gradle:2.3.3'
+
+           // The Google VR NDK requires experimental version 0.9.3 or higher.
+           // classpath 'com.android.tools.build:gradle-experimental:0.9.3'
+
+       ```
+
+    2. 添加依赖库
+
+       ```
+       dependencies {
+            // Adds Google VR spatial audio support
+            compile 'com.google.vr:sdk-audio:1.80.0'
+
+            // Required for all Google VR apps
+            compile 'com.google.vr:sdk-base:1.80.0'
+         }
+
+       ```
+
+    3. 配置ProGuard
+
+       如果需要使用proguard来减小apk文件大小的话，需要添加
+
+       ```
+       buildTypes {
+               release {
+                   minifyEnabled true
+                   proguardFiles.add(file('../../proguard-gvr.txt'))
+               }
+           }
+
+       ```
+
+    4. 接下来需要哪些知识储备：
+
+       - 浏览一遍谷歌VR示例代码 Treasure Hunt，寻宝游戏
+
+       - GoogleVRSDK视频和全景图片示例应用
+
+       - GoogleVR设计和开发准则
+
+       - android空间音频效果开发向导
+
+       - Google VR API
+
+       - Daydream，学习Daydream用户交互控制器相关操作，可查看Review the controller library in **gvr-android-sdk** > **libraries** >
+           **sdk-controller** ，查阅 库api 控制器 API
+
+         > 原文链接如下：
+
+       - [Treasure Hunt sample code walkthrough](https://developers.google.com/vr/android/samples/treasure-hunt)
+
+       - [Google VR SDK video and panoramic image sample app walkthrough](https://developers.google.com/vr/android/samples/vrview)
+
+       - Learn about Google VR design and development principles in [Daydream elements](https://developers.google.com/vr/elements/overview).
+
+       - [Spatial audio for Android tutorial](https://developers.google.com/vr/android/spatial-audio)
+
+       - [Google VR API Reference](https://developers.google.com/vr/android/reference_overview)
+
+       - Daydream:
+
+          Learn about implementing Daydream controller user interactions   in your app:
+
+         - Review the controller library in **gvr-android-sdk** > **libraries** >  **sdk-controller**.
+         - See also the [controller library API reference](https://developers.google.com/vr/android/reference/com/google/vr/sdk/controller/package-summary).
 
 
 - Tilt Brush
+
+  3d空间绘画
+
+  Oculus Rift and HTC VIVE可支持该功能。
+
+  都是vr头戴式设备
+
+  ​
+
 - Earth VR
+
+  vr 视角来查看一些风景名胜
+
 - Cardboard
+
 - Expeditions
+
+  教育类相关，旅行远征，例如体验在火星表面，老师可以带着孩子进行更有沉浸式的体验
+
 - Jump
+
+  Jump is Google's professional VR video solution. Jump makes 3D-360 video
+   production at scale possible with best-in-class automated stitching. 
+  Jump cameras are designed to work with the Jump Assembler to enable 
+  seamless VR video production.
+
+  一系列的摄像头产品，用于拍摄全景视频，自动缝合技术，实现
+
 - Developers
 
 ## Google AR 提供了什么
+
+https://developers.google.com/ar/discover/
+
+ARCore 是一个用于在 Android 上构建增强现实应用的平台。ARCore 使用三个主要技术将虚拟内容与通过手机摄像头看到的现实世界整合：
+
+- [**运动跟踪**](https://developers.google.com/ar/discover/concepts#motion_tracking)让手机可以理解和跟踪它相对于现实世界的位置。
+- [**环境理解**](https://developers.google.com/ar/discover/concepts#environmental_understanding)让手机可以检测平坦水平表面（例如地面或咖啡桌）的大小和位置。
+- [**光估测**](https://developers.google.com/ar/discover/concepts#light_estimation)让手机可以估测环境当前的光照条件。
+
+
+
+### Arcore SDK概览
+
+需要android 7.0以上，需要安装arcore
+
+Cv java
+
+Hello AR java  
+
+但是安装了之后，在7.1上又提示 “this device does not support AR”
+
+
+
+## Google VR AR 在现有平台上的运行情况
+
+1. 寻宝游戏，demo 代码根据vr提供的sdk实现了左右分屏的这种效果，也就是说只要运行在普通的安卓手机上，在屏幕上，就可以看到一个左右分屏显示的功能，然后如果配合Google 的cardboard viewer 或者是 Daydream viewer 是可以直接在眼睛上实现3D显示的。那这个demo在我们的820+眼镜上的运行效果就是。在切换到2D模式的时候，我们看到的就是两个左右的图片，切换到3d的时候，确实可以实现看到一个叠加的图片，但是这个叠加后的有些变形。
+2. ​
+
+
+
+
+
+
 
 
 
@@ -107,6 +236,8 @@ AR(Argumented Reality)增强现实，虚拟数字画面+裸眼现实
 ## Niburu VR 可以做什么
 
 Google Daydream 是否支持？
+
+其他平台的VR兼容性？
 
 
 
