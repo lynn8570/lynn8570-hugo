@@ -440,6 +440,23 @@ void maybeEnableArButton() {
    **computevision** 纹理阅读，可识别物体纹理
 
 
+## 如何兼容Google VR AR
+
+- VR、 Daydream
+
+  <uses-feature android:name="android.software.vr.mode" android:required="false"/>和<uses-feature android:name="android.hardware.vr.high_performance" android:required="false"/> 由 Android N加入的新特性，前者表示需要使用Android VR模式，后者表示需要可支持Daydream的设备。
+
+  对于没有Google VR服务的设备，需要安装Google VR 服务，才可以将可支持Daydream的设备与对应的VR viewer配对
+
+
+- AR
+
+   <uses-feature android:name="android.hardware.camera.ar" android:required="true" />
+
+  另外需要安装ARcore
+
+
+
 
 ## Nibiru 系统
 
@@ -461,16 +478,24 @@ void maybeEnableArButton() {
 
   新建一个空的项目，选择 file-new-import module，选择模块源码位置，点击finish，完成倒入
 
-  需要睿悦的os
+  需要睿悦的os。
+
+  demo展示的主要展示了基于睿悦系统的一些基本控件的使用，基于睿悦系统的头部运动操作和响应，以及对系统设置Wi-Fi、蓝牙等系统界面的调用。
+
+  整体体验起来，空间立体的感觉还不够，似乎只是一个2d界面，经过3d左右分屏处理后，融合sensor之后的附加的交互而已。立体渲染部分比较少，给人的空间感体验较差。
 
 
 
 ## Nibiru AR 
 
-
+目前就demo而言，AR的特性体现的比较少。
 
 ## Unity
 
-
+游戏与VR/AR开发引擎。
 
 ## Unreal
+
+https://www.zhihu.com/question/20116279 知乎上关于unity和unreal两个平台的对比
+
+TODO: 体验一下
