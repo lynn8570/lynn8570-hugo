@@ -2,7 +2,7 @@
 title: "gitbook知识服务共享平台搭建"
 date: "2018-03-15"
 categories: 
-    - "ANDROID"
+    - "SERVER"
 ---
 
 
